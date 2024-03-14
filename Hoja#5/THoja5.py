@@ -70,3 +70,28 @@ class Proceso:
         self.tiempo.append(self.env.now - tiempo_inicial)
 
 # Definición de variables
+velocidad = 6.0
+Mram = 100
+Procesos = 50
+Ninst = 5  # Define el número de intervalos para la generación de tiempos de llegada
+random.seed(5555)
+# Ambientes de simulación
+env = simpy.Environment()
+cpu = simpy.Resource(env, capacity=2)
+ram = simpy.Container(env, init=Mram, capacity=Mram)
+espera = simpy.Resource(env, capacity=2)
+
+# Creación de la instancia de la clase Proceso
+proceso_instancia = Proceso(env, ram, cpu, espera, velocidad, Mram, Procesos, Ninst)
+
+# Se corre la simulación
+env.run()
+
+# Se calcula el tiempo promedio
+promedio = (proceso_instancia.Ttotal / Procesos)
+print("El tiempo promedio de los procesos es:", promedio, "segundos")
+
+# Se calcula la desviación estándar
+suma = sum((i - promedio)**2 for i in proceso_instancia.tiempo)
+desviacion = (suma / (Procesos - 1))**0.5
+print("La desviación estándar de los tiempos es:", desviacion, "segundos")
