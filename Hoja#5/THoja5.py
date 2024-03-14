@@ -23,4 +23,13 @@ class Proceso:
 
         self.env.process(self.ejecutar_procesos())
 
-    
+    def ejecutar_procesos(self):
+        for i in range(self.NPro):
+            tiempo_proceso = random.expovariate(1.0 / self.Ninst)
+            NIns = random.randint(1, 10)
+            CRam = random.randint(1, 10)
+            self.env.process(self.proceso(f'Proceso {i}', CRam, NIns, tiempo_proceso))
+
+        yield self.env.timeout(0)  # Para que el proceso no termine inmediatamente y permita ejecutar la simulación
+
+   
